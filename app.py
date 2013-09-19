@@ -1,7 +1,9 @@
 #!venv/bin/python
-from flask import Flask, jsonify, abort, make_response
-import urllib2
-import csv
+from flask import Flask, abort, make_response, jsonify
+import urllib2, csv
+from functools import wraps
+
+
 root_url = 'http://activefiremaps.fs.fed.us/data/lg_fire/'
 
 app = Flask(__name__)
