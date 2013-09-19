@@ -5,7 +5,6 @@ from functools import wraps
 
 app = Flask(__name__)
 
-
 def support_jsonp(f):
     """Wraps JSONified output for JSONP"""
     @wraps(f)
@@ -18,8 +17,6 @@ def support_jsonp(f):
             return f(*args, **kwargs)
     return decorated_function
 
-
-
 @app.route('/fire/api/v1.0/<datestring>', methods = ['GET'])
 @support_jsonp
 def get_fires(datestring):
@@ -31,26 +28,20 @@ def get_fires(datestring):
 	if datematch:
 		try:
 			response = urllib2.urlopen(root_url+'lg_fire_nifc_'+datestring+'.csv')
-			remotecsv = response.read().split('\n')
-			datarows = remotecsv[1:]
+			datarows = response.read().split('\n')[1:] #drop header
 			reader = csv.reader(datarows)
-			data_out = [];
+			data_out = {'type': 'FeatureCollection','features': []};
 			counter = 0
 			for row in reader:
 				if len(row) == 6:
+					counter+=1
 					latitude, longitude, fire_name, fire_number, area, report_date = row
-					row_out = {}
-					row_out['latitude'] = latitude
-					row_out['longitude'] = longitude
-					row_out['fire_name'] = fire_name
-					row_out['fire_number'] = fire_number
-					row_out['area'] = area
-					row_out['report_date'] = report_date
-					data_out.append(row_out)
-					#print latitude, longitude, fire_name, fire_number, area, report_date
-				counter+=1
+					row_out = {'type':'Feature','id':counter,
+								'geometry':{'type':'Point','coordinates':[float(longitude),float(latitude)]},
+								'properties':{'fire_name':fire_name,'fire_number':fire_number,'area':area,'report_date':report_date}}
+					data_out['features'].append(row_out)				
 			response.close()  # close the file
-			return jsonify({'status':'success','fires': data_out, 'date': datestring})
+			return jsonify({'status':'success','geojson': data_out, 'date': datestring})
 		except urllib2.HTTPError as e:
 			return jsonify({'status':'error','error': 'no data', 'parameter': datestring})
 	else:
