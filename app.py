@@ -1,14 +1,27 @@
 #!venv/bin/python
-from flask import Flask, abort, make_response, jsonify
+from flask import Flask, abort, make_response, jsonify, redirect, request
 import urllib2, csv
 from functools import wraps
 
-
 root_url = 'http://activefiremaps.fs.fed.us/data/lg_fire/'
-
 app = Flask(__name__)
 
+def support_jsonp(f):
+    """Wraps JSONified output for JSONP"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        callback = request.args.get('callback', False)
+        if callback:
+            content = str(callback) + '(' + str(f(*args,**kwargs).data) + ')'
+            return app.response_class(content, mimetype='application/javascript')
+        else:
+            return f(*args, **kwargs)
+    return decorated_function
+
+
+
 @app.route('/fire/api/v1.0/<datestring>', methods = ['GET'])
+@support_jsonp
 def get_fires(datestring):
 	try:
 		response = urllib2.urlopen(root_url+'lg_fire_nifc_'+datestring+'.csv')
