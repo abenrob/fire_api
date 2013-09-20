@@ -6,8 +6,7 @@ from functools import wraps
 app = Flask(__name__)
 
 def support_jsonp(f):
-    """Wraps JSONified output for JSONP"""
-    @wraps(f)
+    @wraps(f) # Wraps JSONified output for JSONP
     def decorated_function(*args, **kwargs):
         callback = request.args.get('callback', False)
         if callback:
@@ -16,6 +15,7 @@ def support_jsonp(f):
         else:
             return f(*args, **kwargs)
     return decorated_function
+    
 @app.route('/')
 def api_root():
 	return render_template('api-root.html')
@@ -24,11 +24,9 @@ def api_root():
 @support_jsonp
 def get_fires(datestring):
 	root_url = 'http://activefiremaps.fs.fed.us/data/lg_fire/'
-	"""matches date format YYYY-MM-DD"""
-	r = re.compile('[1-9][0-9]{3}-[0-1][0-9]-[0-3][0-9]') 
+	r = re.compile('[1-9][0-9]{3}-[0-1][0-9]-[0-3][0-9]') # matches date format YYYY-MM-DD
 	datematch = r.match(datestring)
-	"""if a valid date format"""
-	if datematch:
+	if datematch: # if a valid date format
 		try:
 			response = urllib2.urlopen(root_url+'lg_fire_nifc_'+datestring+'.csv')
 			datarows = response.read().split('\n')[1:] #drop header
@@ -45,15 +43,15 @@ def get_fires(datestring):
 					data_out['features'].append(row_out)				
 			response.close()  # close the file
 			return jsonify({'status':'success','geojson': data_out, 'date': datestring})
-		except urllib2.HTTPError as e:
+		except urllib2.HTTPError as e: # valid date format has no match on USFS site, return error status
 			return jsonify({'status':'error','error': 'no data', 'parameter': datestring})
-	else:
+	else: # not a valid date format, return error status
 		return jsonify({'status':'error','error': 'not valid date (format YYYY-MM-DD)', 'parameter': datestring})
 
 @app.errorhandler(404)
 @support_jsonp
 def not_found(error):
-    return jsonify({ 'error': 'Not found' })
+    return jsonify({ 'error': 'Not found' }) # page doesn't exist, return error status
 
 if __name__ == '__main__':
     app.run(debug = True)
