@@ -20,7 +20,7 @@ run app locally:
 
 try it out:
 
-```abenrob$ curl http://localhost:8000/fire/api/v1.0/2013-09-18```
+```abenrob$ curl http://localhost:8000/api/v1.0/2013-09-18```
 
 now rig-up an app! 
 
@@ -29,4 +29,7 @@ now rig-up an app!
 
 --or-- visit the app deployed to heroku:
 
-http://fire-api.herokuapp.com/fire/api/v1.0/2013-09-18
+http://fire-api.herokuapp.com/
+
+http://fire-api.herokuapp.com/api/v1.0/2013-09-01
+
