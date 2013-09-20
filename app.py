@@ -1,5 +1,5 @@
 #!venv/bin/python
-from flask import Flask, abort, make_response, jsonify, redirect, request
+from flask import Flask, abort, make_response, jsonify, redirect, request, render_template, url_for
 import re, urllib2, csv
 from functools import wraps
 
@@ -16,8 +16,11 @@ def support_jsonp(f):
         else:
             return f(*args, **kwargs)
     return decorated_function
+@app.route('/')
+def api_root():
+	return render_template('api-root.html')
 
-@app.route('/fire/api/v1.0/<datestring>', methods = ['GET'])
+@app.route('/api/v1.0/<datestring>', methods = ['GET'])
 @support_jsonp
 def get_fires(datestring):
 	root_url = 'http://activefiremaps.fs.fed.us/data/lg_fire/'
