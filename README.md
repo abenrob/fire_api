@@ -1,7 +1,7 @@
 fire_api
 ========
 
-simple flask REST api to grab and regurgitate USFS major fires CSV as geoJSON
+simple flask REST api to grab and regurgitate USFS major fires CSV as [geoJSON](http://geojson.org/geojson-spec.html)
 
 get the app:
 ```abenrob$ git clone https://github.com/abenrob/fire_api.git```
@@ -24,12 +24,12 @@ try it out:
 
 now rig-up an app! 
 
---or-- copy the output from the above step, and paste it in [geojson.io](http://geojson.io/) to view the geo-goodness!
+--or-- copy the geojson object output from the above step, and paste it in [geojson.io](http://geojson.io/) to [view the geo-goodness](http://geojson.io/#id=gist:abenrob/6aa3119432f222cb4bb6&map=6/42.956/-118.872)!
 
 
 --or-- visit the app deployed to heroku:
 
 http://fire-api.herokuapp.com/
 
-http://fire-api.herokuapp.com/api/v1.0/2013-09-01
+http://fire-api.herokuapp.com/api/v1.0/2013-09-18
 
