@@ -10,14 +10,14 @@
         <h1>FIRE API <small>USFS Major Fires as geoJSON</small></h1>
       </div>
         <p class="lead">
-          The USFS logs 'Current Large Incidents,' but the data are available as a single day kmz, or a remote csv. This service will retrieve any day (with logged large incidents) and return it as geoJSON.
+          The USFS logs 'Current Large Incidents,' but the data are only available as a single day kmz, or a remote csv. This service will retrieve any day (with logged large incidents) and return it as geoJSON.
         </p>
         <hr>
         <h3>API 1.0 Resource <small class="text-muted">...yep, there's only one...</small></h3>
         <hr>
         <h4>GET /api/v1.0/<em>YYYY-MM-DD</em></h4>
         <hr>
-        <h5><strong><em>SUCCESS</em></strong></h5>
+        <h5 class="text-success"><strong><em>SUCCESS</em></strong></h5>
         Returns JSON (or JSONp) object of the parameter date's large fire incidents. Return obeject has 3 child nodes: 
         <ul>
           <li><strong>date</strong>: the parameter date passed to the api</li>
@@ -31,17 +31,17 @@
           </li>
           <li><strong>status</strong>: indicates that the call was a success</li>
         </ul>
-        <a href="{{url_for('get_fires', datestring='2013-09-01')}}" target="_blank">example call</a>
+        <a href="{{url_for('get_fires', datestring='2013-09-01')}}" target="_blank">example successful call</a>
         <hr>
-        <h5><strong><em>ERROR</em></strong></h5>
+        <h5 class="text-danger"><strong><em>ERROR</em></strong><small class="text-muted"> - Always returns a success as long as API is up and running. Many dates have no data, so an invalid return is likely. The 'status' node if what you want to use to determine quality of return.</small></h5>
         Returns JSON (or JSONp) object of the unsuccessful request. Return obeject has 3 child nodes: 
         <ul>
           <li><strong>error</strong>: the specific error ('no data'|'not valid date (format YYYY-MM-DD)')</li>
           <li><strong>parameter</strong>: the parameter as passed to the api</li>
           <li><strong>status</strong>: indicates that the call was not a success</li>
         </ul>
-        <a href="{{url_for('get_fires', datestring='1920-09-01')}}" target="_blank">example call 1</a><br>
-        <a href="{{url_for('get_fires', datestring='spam')}}" target="_blank">example call 2</a>
+        <a href="{{url_for('get_fires', datestring='1920-09-01')}}" target="_blank">example no-data call</a><br>
+        <a href="{{url_for('get_fires', datestring='spam')}}" target="_blank">example invalid format call</a>
     </div>   
   </body>
 </html>
