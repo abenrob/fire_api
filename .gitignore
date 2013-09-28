@@ -2,4 +2,4 @@
 *.pyo
 venv
 *.mo
-
+.DS_Store
